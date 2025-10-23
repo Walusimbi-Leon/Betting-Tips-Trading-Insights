@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Tips App</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <h1 class="logo">Betting Tips</h1>
+            <nav>
+                <ul class="nav-list">
+                    <li><a class="active" href="index.html">Home</a></li>
+                    <li><a href="admin.html" style="display: none;">Admin</a></li>
+                    <li><a href="#tips">Tips</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button id="theme-toggle" class="btn small">Dark</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-text">
+                    <h2>Sharp, timely betting tips — handpicked for value</h2>
+                    <p>Browse curated tips, filter by league or confidence, and copy any tip with one click.</p>
+                </div>
+                <div class="hero-actions">
+                    <input id="search" type="search" placeholder="Search by team, league, or tip..." />
+                    <div class="filters">
+                        <select id="league-filter">
+                            <option value="all">All leagues</option>
+                            <option value="Premier League">Premier League</option>
+                            <option value="La Liga">La Liga</option>
+                            <option value="Serie A">Serie A</option>
+                            <option value="Champions League">Champions League</option>
+                        </select>
+                        <select id="sort-by">
+                            <option value="newest">Newest</option>
+                            <option value="confidence">Confidence (high → low)</option>
+                            <option value="odds">Odds (low → high)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="container">
+            <h2>Latest Betting Tips</h2>
+            <div class="controls">
+                <div id="stats" class="stats">Showing <span id="count">0</span> tips</div>
+            </div>
+            <div id="tips-container" class="tips-grid" aria-live="polite"></div>
+        </section>
+
+        <section id="featured" class="container featured">
+            <h3>Featured Tip</h3>
+            <div id="featured-tip" class="tip-card featured-card" hidden></div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container footer-inner">
+            <p>&copy; 2023 Betting Tips App</p>
+            <p class="small">Use tips for entertainment; gamble responsibly.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

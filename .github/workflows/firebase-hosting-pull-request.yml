@@ -20,7 +20,7 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}  # your service account JSON
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADERSBETTINGHUB }}  # your service account JSON
           projectId: tradersbettinghub1
           channelId: pr-${{ github.event.pull_request.number }}   # unique URL per PR
           expires: 100d   # auto-delete preview after 100 days (optional)

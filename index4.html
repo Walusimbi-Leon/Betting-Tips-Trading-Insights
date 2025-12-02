@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TradersBettingHub</title>
+  <meta name="description" content="TradersBettingHub" />
+  <style>
+    /* -------------------
+       Design & responsiveness
+       ------------------- */
+    :root{
+      --bg:#071422; --card:#071826; --muted:#9fb3c4; --accent:#06b6d4; --glass: rgba(255,255,255,0.03);
+      --radius:12px; --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;padding:0;background:linear-gradient(180deg,#04121a 0%, #071422 100%);color:#e7f6fb;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;overflow-x:hidden}
+    .wrap{max-width:var(--maxw);margin:12px auto;padding:12px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),#7c3aed);font-weight:800;color:#001018}
+    .title{font-weight:700;font-size:1.05rem}
+    .searchWrap{display:flex;gap:8px;align-items:center}
+    input[type=search], input[type=text], input[type=email], textarea, select {background:transparent;border:1px solid rgba(255,255,255,0.06);padding:9px;border-radius:10px;color:inherit;font-size:0.95rem}
+    input[type=search]{min-width:180px}
+    button{background:linear-gradient(90deg,var(--accent),#7c3aed);border:none;padding:9px 12px;border-radius:10px;color:#001018;font-weight:700}
+    main{margin-top:14px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .card{background:var(--card);padding:12px;border-radius:var(--radius);box-shadow:0 8px 30px rgba(2,6,12,0.6)}
+    .col-4{grid-column:span 4}
+    .col-8{grid-column:span 8}
+    .col-6{grid-column:span 6}
+    .muted{color:var(--muted);font-size:0.95rem}
+    h1,h2,h3{margin:0 0 8px 0}
+    label{font-size:0.9rem;color:var(--muted);display:block;margin-top:8px}
+    textarea{min-height:92px;resize:vertical}
+    .list{max-height:360px;overflow:auto;padding:8px;border-radius:8px;background:var(--glass)}
+    .section{padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+    footer{margin-top:18px;padding:12px;text-align:center;color:var(--muted);font-size:0.9rem}
+    .hidden{display:none!important}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted);padding:8px;border-radius:8px}
+    .danger{background:#ff6b6b;color:#0b0b0b}
+    .success{background:#8ef5e1;color:#022}
+    /* drag handle */
+    .drag-handle{cursor:grab;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.12);margin-right:8px}
+    /* tiny screens */
+    @media (max-width:880px){
+      .col-4,.col-6,.col-8{grid-column:span 12}
+      header{flex-direction:column;align-items:flex-start;gap:10px}
+      .searchWrap{width:100%}
+      input[type=search]{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">TB</div>
+        <div>
+          <div class="title">TradersBettingHub</div>
+          <div class="muted" style="font-size:.85rem"></div>
+        </div>
+      </div>
+
+      <div class="searchWrap">
+        <input id="searchBar" type="search" placeholder="Search pages..." />
+        <button id="searchBtn">Go</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- PUBLIC HOME -->
+      <section id="home" class="card">
+        <h1>Welcome to TradersBettingHub</h1>
+        <div class="muted">Subscribe, give feedback, and explore pages with betting Tips and Trading insights.</div>
+
+        <div style="margin-top:12px" class="grid">
+          <div class="card col-4">
+            <h2>Subscribe</h2>
+            <label>Email</label>
+            <input id="subscriberEmail" type="email" placeholder="you@gmail.com" />
+            <button id="subscribeBtn" style="margin-top:8px">Subscribe</button>
+            <div id="subscribeMsg" class="muted" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card col-4">
+            <h2>Send feedback</h2>
+            <label>Message</label>
+            <textarea id="feedbackText" placeholder="Your feedback..."></textarea>
+            <label>Name (optional)</label>
+            <input id="feedbackName" type="text" placeholder="Your name" />
+            <button id="sendFeedbackBtn" style="margin-top:8px">Send Feedback</button>
+            <div id="feedbackMsg" class="muted" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card col-4">
+            <h2>Pages</h2>
+            <div id="pagesList" class="list muted small">Loading pages…</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ADMIN: End (feedback, subscribers, visits) -->
+      <section id="admin-end" class="card hidden">
+        <h1>Admin Dashboard — Feedbacks & Subscribers</h1>
+        <div class="muted">Key: <code>admin-end.bt</code></div>
+
+        <div style="margin-top:12px" class="grid">
+          <div class="card col-4">
+            <h2>Today's visitors</h2>
+            <div id="visitorsCount" class="muted" style="font-size:1.9rem">—</div>
+            <div class="muted small">Visitors counted per day</div>
+          </div>
+
+          <div class="card col-4">
+            <h2>Subscribers</h2>
+            <div id="subsList" class="list"></div>
+          </div>
+
+          <div class="card col-4">
+            <h2>Feedbacks</h2>
+            <div id="feedbacksList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN: Leon (Page Builder) -->
+      <section id="admin-leon" class="card hidden">
+        <h1>Admin CMS — Page Builder</h1>
+        <div class="muted">Key: <code>admin-leon.bt</code></div>
+
+        <div style="margin-top:12px" class="row" >
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="newPageBtn">+ New Page</button>
+            <select id="pagesSelect"><option value="">Load page...</option></select>
+            <button id="savePageBtn" class="success">Save</button>
+            <button id="deletePageBtn" class="danger">Delete</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="grid">
+          <div class="card col-6">
+            <h2>Page Editor</h2>
+            <label>Page Title</label>
+            <input id="pageTitle" placeholder="Page title" />
+
+            <label style="margin-top:10px">Add Section</label>
+            <select id="sectionType">
+              <option value="text">Text</option>
+              <option value="button">Button</option>
+              <option value="input">Input</option>
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+              <option value="audio">Audio</option>
+            </select>
+            <div id="sectionOptions" style="margin-top:8px"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="addSectionBtn">Add Section</button>
+              <button id="clearSectionsBtn" class="danger">Clear</button>
+            </div>
+
+            <h3 style="margin-top:12px">Sections (drag to reorder)</h3>
+            <div id="sectionsList" class="list"></div>
+          </div>
+
+          <div class="card col-6">
+            <h2>Preview</h2>
+            <div id="pagePreview" class="page-preview" style="min-height:180px"></div>
+
+            <h3 style="margin-top:12px">Upload Media (stored as Base64 in Realtime DB)</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="fileInput" type="file" />
+              <button id="uploadFileBtn">Upload</button>
+            </div>
+            <div id="uploadStatus" class="muted" style="margin-top:8px"></div>
+            <small class="muted">Tip: small images/audio ok for prototype. Large files will increase your DB size.</small>
+          </div>
+        </div>
+      </section>
+
+      <footer class="muted">tradersbettinghub.web.app</footer>
+    </main>
+  </div>
+
+  <!-- Firebase (modular SDK) — your config (from earlier) is included below -->
+  <script type="module">
+    // ----- Firebase initialization (modular) -----
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+    import {
+      getDatabase,
+      ref,
+      push,
+      set,
+      onValue,
+      get,
+      child,
+      update
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBz0AOQbvBKf3oikFGaQSVHKoQmMD6xFi4",
+      authDomain: "tradersbettinghub1.firebaseapp.com",
+      projectId: "tradersbettinghub1",
+      storageBucket: "tradersbettinghub1.firebasestorage.app",
+      messagingSenderId: "298690642248",
+      appId: "1:298690642248:web:9dac572727df849d49f37d",
+      measurementId: "G-7MN8XVBCJ3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch(e) { /* analytics may be blocked by browsers */ }
+    const db = getDatabase(app);
+
+    // Make db globally available for quick debugging
+    window.__TB_DB = db;
+
+    // ---------- Utility ----------
+    function todayKey() {
+      return new Date().toISOString().slice(0,10); // YYYY-MM-DD
+    }
+
+    function show(elId) {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('admin-end').classList.add('hidden');
+      document.getElementById('admin-leon').classList.add('hidden');
+      document.getElementById(elId).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ---------- Visitor counter ----------
+    (async function incrementVisit(){
+      try {
+        const key = todayKey();
+        const r = ref(db, 'visits/' + key);
+        // read current, increment atomically using get+set
+        const s = await get(r);
+        const cur = s.exists() ? (s.val()||0) : 0;
+        await set(r, cur + 1);
+      } catch(e){
+        console.warn("visit increment failed", e);
+      }
+    })();
+
+    // ---------- Subscribe & Feedback handlers ----------
+    document.getElementById('subscribeBtn').addEventListener('click', async ()=>{
+      const email = document.getElementById('subscriberEmail').value.trim();
+      const msg = document.getElementById('subscribeMsg');
+      msg.textContent = '';
+      if(!email){ msg.textContent = 'Enter a valid email.'; return; }
+      try {
+        const p = push(ref(db, 'subscriptions'));
+        await set(p, { email, createdAt: Date.now() });
+        msg.textContent = 'Thanks — subscribed!';
+        document.getElementById('subscriberEmail').value = '';
+      } catch(e){ msg.textContent = 'Error: ' + (e.message||e); console.error(e); }
+    });
+
+    document.getElementById('sendFeedbackBtn').addEventListener('click', async ()=>{
+      const name = document.getElementById('feedbackName').value.trim();
+      const text = document.getElementById('feedbackText').value.trim();
+      const msg = document.getElementById('feedbackMsg');
+      msg.textContent = '';
+      if(!text){ msg.textContent = 'Please write feedback first.'; return; }
+      try {
+        const p = push(ref(db, 'feedbacks'));
+        await set(p, { name: name||'Anonymous', text, createdAt: Date.now() });
+        msg.textContent = 'Feedback sent — thank you!';
+        document.getElementById('feedbackName').value = '';
+        document.getElementById('feedbackText').value = '';
+      } catch(e){ msg.textContent = 'Error: ' + (e.message||e); console.error(e); }
+    });
+
+    // ---------- Pages list (public) ----------
+    async function refreshPublicPages(){
+      const pagesRef = ref(db, 'pages');
+      onValue(pagesRef, snap => {
+        const el = document.getElementById('pagesList');
+        el.innerHTML = '';
+        if(!snap.exists()){ el.innerHTML = '<div class="muted small">No pages yet.</div>'; return; }
+        snap.forEach(childSnap=>{
+          const p = childSnap.val();
+          const d = document.createElement('div');
+          d.className = 'section';
+          d.innerHTML = `<div style="font-weight:700">${escapeHtml(p.title||'Untitled')}</div>
+                         <div class="muted small">${(p.sections?Object.keys(p.sections).length:0)} section(s)</div>
+                         <div style="margin-top:8px"><button data-id="${childSnap.key}" class="openPageBtn btn-ghost">Open Page</button></div>`;
+          el.appendChild(d);
+        });
+        // attach open handlers
+        el.querySelectorAll('.openPageBtn').forEach(b=>{
+          b.addEventListener('click', ()=> openPublicPage(b.dataset.id));
+        });
+      });
+    }
+
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    // open page modal
+    async function openPublicPage(pageId){
+      const pRef = ref(db, 'pages/' + pageId);
+      const snap = await get(pRef);
+      if(!snap.exists()) return alert('Page not found');
+      const page = snap.val();
+
+      // modal
+      const modal = document.createElement('div');
+      Object.assign(modal.style,{position:'fixed',left:0,top:0,width:'100%',height:'100%',background:'rgba(0,6,12,0.7)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9999});
+      const frame = document.createElement('div');
+      frame.className = 'card';
+      Object.assign(frame.style,{width:'92%',maxWidth:'900px',maxHeight:'92%',overflow:'auto',padding:'16px'});
+      const close = document.createElement('button'); close.textContent = 'Close'; close.className = 'btn-ghost'; Object.assign(close.style,{float:'right'});
+      close.onclick = ()=> document.body.removeChild(modal);
+      frame.appendChild(close);
+      const h = document.createElement('h2'); h.textContent = page.title; frame.appendChild(h);
+
+      const container = document.createElement('div');
+      container.style.marginTop = '12px';
+      if(page.sections){
+        Object.keys(page.sections).forEach(k=>{
+          const s = page.sections[k];
+          const node = document.createElement('div'); node.style.marginBottom = '10px';
+          if(s.type==='text'){ node.innerHTML = s.props.html || escapeHtml(s.props.text||''); }
+          else if(s.type==='button'){ const btn = document.createElement('button'); btn.textContent = s.props.label||'Button'; if(s.props.actionUrl) btn.onclick = ()=> window.open(s.props.actionUrl,'_blank'); node.appendChild(btn); }
+          else if(s.type==='input'){ const ip = document.createElement('input'); ip.placeholder = s.props.placeholder||''; node.appendChild(ip); }
+          else if(s.type==='image'){ const img = document.createElement('img'); img.src = s.props.src||''; img.style.maxWidth='100%'; img.style.borderRadius='8px'; node.appendChild(img); }
+          else if(s.type==='video'){ const v = document.createElement('video'); v.src = s.props.src||''; v.controls=true; v.style.maxWidth='100%'; node.appendChild(v); }
+          else if(s.type==='audio'){ const a = document.createElement('audio'); a.src = s.props.src||''; a.controls=true; node.appendChild(a); }
+          container.appendChild(node);
+        });
+      } else {
+        container.innerHTML = '<div class="muted">No sections yet.</div>';
+      }
+      frame.appendChild(container);
+      modal.appendChild(frame);
+      document.body.appendChild(modal);
+    }
+
+    // ---------- Admin: key handling ----------
+    const ADMIN_KEY_1 = 'admin-end.bt';
+    const ADMIN_KEY_2 = 'admin-leon.bt';
+    document.getElementById('searchBtn').addEventListener('click', handleSearch);
+    document.getElementById('searchBar').addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleSearch(); });
+
+    async function handleSearch(){
+      const q = document.getElementById('searchBar').value.trim();
+      if(!q) return;
+      if(q === ADMIN_KEY_1){
+        show('admin-end');
+        await populateAdminEnd();
+      } else if(q === ADMIN_KEY_2){
+        show('admin-leon');
+        await refreshPagesSelect();
+      } else {
+        // search pages by title
+        const pagesRef = ref(db, 'pages');
+        const snap = await get(pagesRef);
+        const results = [];
+        if(snap.exists()){
+          snap.forEach(child=>{
+            const p = child.val();
+            if((p.title||'').toLowerCase().includes(q.toLowerCase())) results.push({ id: child.key, ...p });
+          });
+        }
+        renderSearchResults(results);
+        show('home');
+      }
+    }
+
+    function renderSearchResults(results){
+      const el = document.getElementById('pagesList');
+      el.innerHTML = '';
+      if(!results || results.length===0){ el.innerHTML = '<div class="muted small">No pages found.</div>'; return; }
+      results.forEach(p=>{
+        const d = document.createElement('div');
+        d.className = 'section';
+        d.innerHTML = `<div style="font-weight:700">${escapeHtml(p.title)}</div>
+                       <div class="muted small">${p.sections?Object.keys(p.sections).length:0} section(s)</div>
+                       <div style="margin-top:8px"><button class="btn-ghost openPageBtn" data-id="${p.id}">Open Page</button></div>`;
+        el.appendChild(d);
+      });
+      el.querySelectorAll('.openPageBtn').forEach(b=> b.addEventListener('click', ()=> openPublicPage(b.dataset.id)));
+    }
+
+    // ---------- Admin End: load lists ----------
+    async function populateAdminEnd(){
+      try {
+        // subscribers
+        onValue(ref(db, 'subscriptions'), snap=>{
+          const el = document.getElementById('subsList'); el.innerHTML = '';
+          if(!snap.exists()){ el.innerHTML = '<div class="muted small">No subscribers</div>'; return; }
+          snap.forEach(s=>{
+            const v = s.val();
+            const d = document.createElement('div'); d.className='section'; d.innerHTML = `<div style="font-weight:700">${escapeHtml(v.email||v)}</div><div class="muted small">${v.createdAt ? new Date(v.createdAt).toLocaleString() : ''}</div>`;
+            el.appendChild(d);
+          });
+        });
+
+        // feedbacks
+        onValue(ref(db, 'feedbacks'), snap=>{
+          const el = document.getElementById('feedbacksList'); el.innerHTML = '';
+          if(!snap.exists()){ el.innerHTML = '<div class="muted small">No feedback yet</div>'; return; }
+          snap.forEach(s=>{
+            const v = s.val();
+            const d = document.createElement('div'); d.className='section'; d.innerHTML = `<div style="font-weight:700">${escapeHtml(v.name||'Anonymous')}</div><div class="muted small">${v.createdAt ? new Date(v.createdAt).toLocaleString() : ''}</div><div style="margin-top:6px">${escapeHtml(v.text)}</div>`;
+            el.appendChild(d);
+          });
+        });
+
+        // today's visitors (and overall)
+        onValue(ref(db, 'visits'), snap=>{
+          const key = todayKey();
+          const todayVal = snap.exists() && snap.hasChild ? (snap.child(key).val() || 0) : (snap.val() && snap.val()[key] ? snap.val()[key] : 0);
+          // compute total
+          let total = 0;
+          if(snap.exists()){
+            const v = snap.val();
+            Object.keys(v).forEach(k => { total += (Number(v[k]) || 0) });
+          }
+          document.getElementById('visitorsCount').textContent = `${todayVal} today — ${total} total`;
+        });
+
+      } catch(e){ console.error(e); }
+    }
+
+    // ---------- Admin Leon: Page builder ----------
+    // Page data structure:
+    // pages/{pageId} = { title, sections: { sectionId: {type, props, order} }, createdAt, updatedAt }
+    let currentEditingPage = { title:'Untitled', sections:{} , id:null };
+
+    // UI: section options
+    const sectionTypeEl = document.getElementById('sectionType');
+    const sectionOptsEl = document.getElementById('sectionOptions');
+    function renderSectionOptions(){
+      const v = sectionTypeEl.value;
+      sectionOptsEl.innerHTML = '';
+      if(v === 'text'){ sectionOptsEl.innerHTML = '<label>Text (HTML allowed)</label><textarea id="opt_text"></textarea>'; }
+      else if(v === 'button'){ sectionOptsEl.innerHTML = '<label>Label</label><input id="opt_btn_label" /><label>Action URL</label><input id="opt_btn_url" />'; }
+      else if(v === 'input'){ sectionOptsEl.innerHTML = '<label>Placeholder</label><input id="opt_input_placeholder" />'; }
+      else if(v === 'image' || v === 'video' || v === 'audio'){ sectionOptsEl.innerHTML = '<label>Media source</label><input id="opt_file_url" placeholder=\"Paste media URL or select uploaded media below\"/>'; }
+    }
+    sectionTypeEl.addEventListener('change', renderSectionOptions);
+    renderSectionOptions();
+
+    // add section
+    document.getElementById('addSectionBtn').addEventListener('click', ()=>{
+      const type = sectionTypeEl.value;
+      const id = 's_' + Date.now();
+      const props = {};
+      if(type === 'text') props.html = document.getElementById('opt_text').value || '';
+      if(type === 'button') { props.label = document.getElementById('opt_btn_label').value || 'Button'; props.actionUrl = document.getElementById('opt_btn_url').value || ''; }
+      if(type === 'input') props.placeholder = document.getElementById('opt_input_placeholder').value || '';
+      if(type === 'image' || type === 'video' || type === 'audio') props.src = document.getElementById('opt_file_url').value || '';
+      const order = Object.keys(currentEditingPage.sections).length;
+      currentEditingPage.sections[id] = { id, type, props, order };
+      refreshSectionsUI();
+      renderPreview();
+    });
+
+    // clear
+    document.getElementById('clearSectionsBtn').addEventListener('click', ()=>{
+      if(confirm('Clear all sections?')){ currentEditingPage.sections = {}; refreshSectionsUI(); renderPreview(); }
+    });
+
+    // sections UI
+    function makeSectionNode(section){
+      const s = document.createElement('div');
+      s.className = 'section';
+      s.draggable = true;
+      s.dataset.id = section.id;
+      s.style.display = 'flex'; s.style.justifyContent='space-between'; s.style.alignItems='center';
+      const left = document.createElement('div'); left.style.flex='1';
+      left.innerHTML = `<div style="display:flex;align-items:center;gap:8px"><div class="drag-handle">☰</div><div style="font-weight:700">${escapeHtml(section.type)}</div></div><div class="muted small">${escapeHtml(JSON.stringify(section.props).slice(0,120))}</div>`;
+      const right = document.createElement('div');
+      right.innerHTML = `<button class="btn-ghost editBtn">Edit</button> <button class="btn-ghost rmBtn">Remove</button>`;
+      s.appendChild(left); s.appendChild(right);
+
+      // drag handlers
+      s.addEventListener('dragstart', (ev)=>{ ev.dataTransfer.setData('text/plain', section.id); s.style.opacity='0.4'; });
+      s.addEventListener('dragend', ()=> s.style.opacity='1');
+      s.addEventListener('dragover', (ev)=> ev.preventDefault());
+      s.addEventListener('drop', (ev)=>{
+        ev.preventDefault();
+        const fromId = ev.dataTransfer.getData('text/plain');
+        const toId = section.id;
+        reorderSections(fromId, toId);
+      });
+
+      // remove
+      right.querySelector('.rmBtn').addEventListener('click', ()=>{
+        delete currentEditingPage.sections[section.id];
+        rebuildOrder();
+        refreshSectionsUI(); renderPreview();
+      });
+
+      // edit
+      right.querySelector('.editBtn').addEventListener('click', ()=>{
+        const t = section.type;
+        if(t==='text'){
+          const val = prompt('Edit text/HTML:', section.props.html||section.props.text||'');
+          if(val !== null){ section.props.html = val; currentEditingPage.sections[section.id] = section; refreshSectionsUI(); renderPreview(); }
+        } else if(t==='button'){
+          const lbl = prompt('Label:', section.props.label||'');
+          if(lbl===null) return;
+          const url = prompt('Action URL:', section.props.actionUrl||'');
+          section.props.label = lbl; section.props.actionUrl = url||''; currentEditingPage.sections[section.id] = section; refreshSectionsUI(); renderPreview();
+        } else if(t==='input'){
+          const ph = prompt('Placeholder:', section.props.placeholder||'');
+          if(ph!==null){ section.props.placeholder = ph; currentEditingPage.sections[section.id] = section; refreshSectionsUI(); renderPreview(); }
+        } else if(t==='image' || t==='video' || t==='audio'){
+          // let admin pick a media url (from media pool) or paste url
+          const src = prompt('Media URL or data URL:', section.props.src||'');
+          if(src !== null){ section.props.src = src; currentEditingPage.sections[section.id] = section; refreshSectionsUI(); renderPreview(); }
+        }
+      });
+
+      return s;
+    }
+
+    function refreshSectionsUI(){
+      const list = document.getElementById('sectionsList');
+      list.innerHTML = '';
+      // sort by order
+      const secs = Object.values(currentEditingPage.sections).sort((a,b)=> (a.order||0) - (b.order||0));
+      secs.forEach(s=> list.appendChild(makeSectionNode(s)));
+    }
+
+    function reorderSections(fromId, toId){
+      const secs = Object.values(currentEditingPage.sections).sort((a,b)=> (a.order||0) - (b.order||0));
+      const fromIdx = secs.findIndex(s=>s.id===fromId);
+      const toIdx = secs.findIndex(s=>s.id===toId);
+      if(fromIdx < 0 || toIdx < 0) return;
+      const item = secs.splice(fromIdx,1)[0];
+      secs.splice(toIdx,0,item);
+      // reassign order
+      secs.forEach((s,i)=> s.order = i);
+      currentEditingPage.sections = {};
+      secs.forEach(s=> currentEditingPage.sections[s.id]=s);
+      refreshSectionsUI();
+    }
+
+    function rebuildOrder(){
+      const secs = Object.values(currentEditingPage.sections);
+      secs.forEach((s,i)=> s.order = i);
+      const obj = {};
+      secs.forEach(s=> obj[s.id]=s);
+      currentEditingPage.sections = obj;
+    }
+
+    // preview
+    function renderPreview(){
+      const pv = document.getElementById('pagePreview');
+      pv.innerHTML = `<h3 style="margin:0 0 8px 0">${escapeHtml(currentEditingPage.title||'Untitled')}</h3>`;
+      const secs = Object.values(currentEditingPage.sections).sort((a,b)=> (a.order||0)-(b.order||0));
+      secs.forEach(s=>{
+        const div = document.createElement('div'); div.className='section';
+        if(s.type==='text') div.innerHTML = s.props.html || s.props.text || '';
+        else if(s.type==='button'){ const b = document.createElement('button'); b.textContent = s.props.label||'Button'; if(s.props.actionUrl) b.onclick = ()=> window.open(s.props.actionUrl,'_blank'); div.appendChild(b); }
+        else if(s.type==='input'){ const i = document.createElement('input'); i.placeholder = s.props.placeholder||''; div.appendChild(i); }
+        else if(s.type==='image'){ const img = document.createElement('img'); img.src = s.props.src||''; img.style.maxWidth='100%'; div.appendChild(img); }
+        else if(s.type==='video'){ const v = document.createElement('video'); v.src = s.props.src||''; v.controls=true; v.style.maxWidth='100%'; div.appendChild(v); }
+        else if(s.type==='audio'){ const a = document.createElement('audio'); a.src = s.props.src||''; a.controls=true; div.appendChild(a); }
+        pv.appendChild(div);
+      });
+    }
+
+    // ---------- Media upload (Base64) ----------
+    document.getElementById('uploadFileBtn').addEventListener('click', async ()=>{
+      const input = document.getElementById('fileInput');
+      const status = document.getElementById('uploadStatus');
+      status.textContent = '';
+      if(!input.files || input.files.length === 0){ status.textContent = 'Pick a file first.'; return; }
+      const file = input.files[0];
+      // read as data URL
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const dataUrl = e.target.result;
+          // push to /media
+          const mRef = push(ref(db, 'media'));
+          await set(mRef, { name: file.name, type: file.type, size: file.size, dataUrl, createdAt: Date.now() });
+          status.textContent = 'Uploaded — added to media pool. You can paste the media URL below and use it in sections.';
+        } catch(err){
+          console.error(err);
+          status.textContent = 'Upload failed: ' + (err.message||err);
+        }
+      };
+      reader.onerror = () => { status.textContent = 'Failed to read file'; };
+      reader.readAsDataURL(file);
+    });
+
+    // helper: load media pool -> shows available uploaded media urls
+    async function loadMediaPool(){
+      const el = document.getElementById('uploadStatus');
+      const snap = await get(ref(db,'media'));
+      if(!snap.exists()){ el.textContent = 'No media uploaded yet.'; return; }
+      const items = snap.val();
+      const keys = Object.keys(items).reverse();
+      el.innerHTML = '<div class="muted small">Available media:</div>';
+      keys.forEach(k=>{
+        const m = items[k];
+        const row = document.createElement('div'); row.style.marginTop='6px';
+        const btn = document.createElement('button'); btn.className='btn-ghost'; btn.textContent = m.name || k;
+        btn.addEventListener('click', ()=> {
+          // copy dataUrl to clipboard and set to section input if present
+          navigator.clipboard.writeText(m.dataUrl).then(()=> {
+            el.textContent = 'Media data URL copied to clipboard — paste into the media source field.';
+          }).catch(()=> el.textContent = 'Copied to clipboard failed; open console to view.');
+          console.log('media item dataUrl (open console):', m.dataUrl);
+        });
+        row.appendChild(btn);
+        el.appendChild(row);
+      });
+    }
+
+    // ---------- Save / Load pages ----------
+    async function refreshPagesSelect(){
+      const sel = document.getElementById('pagesSelect');
+      sel.innerHTML = '<option value="">Load page...</option>';
+      const snap = await get(ref(db,'pages'));
+      if(!snap.exists()) return;
+      snap.forEach(child=>{
+        const p = child.val();
+        const o = document.createElement('option'); o.value = child.key; o.textContent = p.title || ('Untitled - ' + child.key);
+        sel.appendChild(o);
+      });
+    }
+
+    document.getElementById('newPageBtn').addEventListener('click', ()=>{
+      currentEditingPage = { title:'Untitled', sections: {}, id: null };
+      document.getElementById('pagesSelect').value = '';
+      document.getElementById('pageTitle').value = currentEditingPage.title;
+      refreshSectionsUI(); renderPreview();
+    });
+
+    document.getElementById('pagesSelect').addEventListener('change', async (e)=>{
+      const id = e.target.value;
+      if(!id) return;
+      const snap = await get(ref(db, 'pages/' + id));
+      if(!snap.exists()) return alert('Page not found');
+      const p = snap.val();
+      currentEditingPage = { id, title: p.title || 'Untitled', sections: p.sections || {} };
+      document.getElementById('pageTitle').value = currentEditingPage.title;
+      refreshSectionsUI(); renderPreview();
+    });
+
+    document.getElementById('savePageBtn').addEventListener('click', async ()=>{
+      try {
+        const title = document.getElementById('pageTitle').value.trim();
+        if(!title) return alert('Set a page title first.');
+        currentEditingPage.title = title;
+        currentEditingPage.updatedAt = Date.now();
+        if(currentEditingPage.id){
+          await set(ref(db, 'pages/' + currentEditingPage.id), currentEditingPage);
+          alert('Page updated.');
+        } else {
+          const p = push(ref(db, 'pages'));
+          currentEditingPage.createdAt = Date.now();
+          await set(p, currentEditingPage);
+          currentEditingPage.id = p.key;
+          alert('Page saved. ID: ' + p.key);
+          await refreshPagesSelect();
+        }
+      } catch(e){ console.error(e); alert('Save failed: ' + (e.message||e)); }
+    });
+
+    document.getElementById('deletePageBtn').addEventListener('click', async ()=>{
+      if(!currentEditingPage.id) return alert('Load a saved page first.');
+      if(!confirm('Delete this page?')) return;
+      try {
+        await set(ref(db, 'pages/' + currentEditingPage.id), null);
+        currentEditingPage = { title:'Untitled', sections: {}, id:null };
+        document.getElementById('pageTitle').value = '';
+        refreshSectionsUI(); renderPreview();
+        await refreshPagesSelect();
+        alert('Deleted.');
+      } catch(e){ console.error(e); alert('Delete failed: ' + (e.message||e)); }
+    });
+
+    // load pages & media pool on admin view open
+    document.getElementById('pagesSelect').addEventListener('click', ()=> refreshPagesSelect());
+    document.getElementById('uploadFileBtn').addEventListener('click', loadMediaPool);
+
+    // ---------- Admin End refresh on load & public pages list ----------
+    refreshPublicPages();
+    // Keep live updates of pages list
+    onValue(ref(db,'pages'), ()=> refreshPublicPages());
+
+    // expose small API for debugging
+    window.TBH = { db, refreshPublicPages, refreshPagesSelect, loadMediaPool };
+
+    // ensure initial small UI states
+    document.getElementById('pageTitle').value = currentEditingPage.title;
+    refreshSectionsUI(); renderPreview();
+
+  </script>
+</body>
+</html>

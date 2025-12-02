@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TradersBettingHub</title>
+  <meta name="description" content="TradersBettingHub - pages, subscribe, feedback, admin builder" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" style="font-size: 150%;">TB</div>
+        <div class="brand-text">
+          <div class="title">TradersBettingHub</div>
+          <div class="subtitle">Pages</div>
+        </div>
+      </div>
+
+      <div class="search-area">
+        <input id="searchBar" type="search" placeholder="Search pages........"/>
+        <button id="searchBtn">Go</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Home (Pages -> Subscribe -> Feedback) -->
+      <section id="home" class="card">
+        <h1 class="section-title">Pages</h1>
+        <div id="pagesList" class="list loading"><br><br><br>Loading pages…<br>Please Wait.....<br><br><br><br></div>
+
+        <div class="block">
+          <h2>Subscribe</h2>
+          <div>Subscribe with your email address to join our newsletter community, you will be receiving updates and betting tips in your email</div>
+          <label class="small-muted" style="font-weight: bolder;">Email</label><br>
+          <input id="subscriberEmail" type="email" placeholder="you@gmail.com" />
+          <div class="row" style="margin-top:8px">
+            <button id="subscribeBtn">Subscribe</button>
+            <div id="subscribeMsg" class="small-muted message"></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Feedback</h2>
+          <label class="small-muted" style="font-weight: bolder;">Message</label><br>
+          <textarea id="feedbackText" placeholder="Write your feedback..." rows="4" style="width: 80%;"></textarea><br>
+          <label class="small-muted" style="font-weight: bolder;">Name (optional)</label><br>
+          <input id="feedbackName" type="text" placeholder="Your Name (Optional)" style="font-weight: lighter; font-size: small;"/>
+          <div class="row" style="margin-top:8px">
+            <button id="sendFeedbackBtn">Send Feedback</button>
+            <div id="feedbackMsg" class="small-muted message"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin: end (feedback/subscribers/visits) -->
+      <section id="admin-end" class="card hidden">
+        <h1 class="section-title">Admin — Feedback & Subscribers</h1>
+        <div class="muted small">Key: <code>admin-end.bt</code></div>
+
+        <div class="grid admin-grid" style="margin-top:12px">
+          <div class="card small-card">
+            <h3>Today's visitors</h3>
+            <div id="visitorsCount" class="big-muted">—</div>
+            <div class="small-muted">counts per day</div>
+          </div>
+
+          <div class="card small-card">
+            <h3>Subscribers</h3>
+            <div id="subsList" class="list"></div>
+          </div>
+
+          <div class="card small-card">
+            <h3>Feedbacks</h3>
+            <div id="feedbacksList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin: leon (page builder) -->
+      <section id="admin-leon" class="card hidden">
+        <h1 class="section-title">Admin — Page Builder</h1>
+        <div class="muted small">Key: <code>admin-leon.bt</code></div>
+
+        <div class="controls">
+          <button id="newPageBtn">+ New Page</button>
+          <select id="pagesSelect"><option value="">Load page...</option></select>
+          <button id="savePageBtn">Save Page</button>
+          <button id="deletePageBtn" class="danger">Delete</button>
+        </div>
+
+        <div class="builder-grid">
+          <div class="card builder-left">
+            <label class="small-muted">Page Title</label>
+            <input id="pageTitle" placeholder="Page title" />
+
+            <label class="small-muted" style="margin-top:10px">Add Section</label>
+            <select id="sectionType">
+              <option value="text">Text</option>
+              <option value="image">Image</option>
+              <option value="button">Button</option>
+            </select>
+
+            <div id="sectionOptions" style="margin-top:8px"></div>
+
+            <div class="row" style="margin-top:8px">
+              <button id="addSectionBtn">Add Section</button>
+              <button id="clearSectionsBtn" class="danger">Clear</button>
+            </div>
+
+            <h3 style="margin-top:12px">Sections</h3>
+            <div id="sectionsList" class="list"></div>
+          </div>
+
+          <div class="card builder-right">
+            <h3>Preview</h3>
+            <div id="pagePreview" class="list"></div>
+
+            <h3 style="margin-top:12px">Upload Image (device)</h3>
+            <div class="row" style="align-items:center">
+              <input id="fileInput" type="file" accept="image/*" />
+              <button id="uploadFileBtn">Upload & Insert</button>
+            </div>
+            <div id="uploadStatus" class="small-muted" style="margin-top:8px">Upload small images for prototyping. Admins can remove images by clearing media or deleting pages.</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="muted">tradersbettinghub.web.app</footer>
+  </div>
+
+  <!-- App script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
